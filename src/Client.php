@@ -26,7 +26,7 @@ class Client
     {
         $options['body'] = $options['body'] ?? $body;
 
-        $request = new \GuzzleHttp\Psr7\Request('DELETE', $path);
+        $request = $this->createRequest('DELETE', $path);
 
         return $this->send($request, $options);
     }
@@ -35,7 +35,7 @@ class Client
     {
         $options['query'] = (array_key_exists('query', $options) ? array_merge($query, $options['query']) : $query);
 
-        $request = new \GuzzleHttp\Psr7\Request('GET', $path);
+        $request = $this->createRequest('GET', $path);
 
         return $this->send($request, $options);
     }
@@ -58,7 +58,7 @@ class Client
     {
         $options['body'] = $options['body'] ?? $body;
 
-        $request = new \GuzzleHttp\Psr7\Request('POST', $path);
+        $request = $this->createRequest('POST', $path);
 
         return $this->send($request, $options);
     }
@@ -67,9 +67,19 @@ class Client
     {
         $options['body'] = $options['body'] ?? $body;
 
-        $request = new \GuzzleHttp\Psr7\Request('PUT', $path);
+        $request = $this->createRequest('PUT', $path);
 
         return $this->send($request, $options);
+    }
+
+    protected function createRequest($method, $path) : \GuzzleHttp\Psr7\Request
+    {
+        return new \GuzzleHttp\Psr7\Request($method, $this->pathPrefix() . $path);
+    }
+
+    protected function pathPrefix() : string
+    {
+        return '';
     }
 
     protected function send(\GuzzleHttp\Psr7\Request $request, array $options) : array
