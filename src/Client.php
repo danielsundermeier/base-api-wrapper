@@ -22,7 +22,7 @@ class Client
         $this->client = new \GuzzleHttp\Client($config);
     }
 
-    public function delete(string $path, string $body = '', array $options = []) : array
+    public function delete(string $path, string $body = '', array $options = [])
     {
         $options['body'] = $options['body'] ?? $body;
 
@@ -31,7 +31,7 @@ class Client
         return $this->send($request, $options);
     }
 
-    public function get(string $path, array $query = [], array $options = []) : array
+    public function get(string $path, array $query = [], array $options = [])
     {
         $options['query'] = (array_key_exists('query', $options) ? array_merge($query, $options['query']) : $query);
 
@@ -40,21 +40,21 @@ class Client
         return $this->send($request, $options);
     }
 
-    public function postFormParams(string $path, array $data, array $options = []) : array
+    public function postFormParams(string $path, array $data, array $options = [])
     {
         $options['form_params'] = $data;
 
         return $this->post($path, '', $options);
     }
 
-    public function postJson(string $path, array $data, array $options = []) : array
+    public function postJson(string $path, array $data, array $options = [])
     {
         $options['json'] = $data;
 
         return $this->post($path, '', $options);
     }
 
-    public function post(string $path, string $body = '', array $options = []) : array
+    public function post(string $path, string $body = '', array $options = [])
     {
         $options['body'] = $options['body'] ?? $body;
 
@@ -63,7 +63,7 @@ class Client
         return $this->send($request, $options);
     }
 
-    public function put(string $path, string $body = '', array $options = []) : array
+    public function put(string $path, string $body = '', array $options = [])
     {
         $options['body'] = $options['body'] ?? $body;
 
@@ -82,7 +82,7 @@ class Client
         return '';
     }
 
-    protected function send(\GuzzleHttp\Psr7\Request $request, array $options) : array
+    protected function send(\GuzzleHttp\Psr7\Request $request, array $options)
     {
         // TODO: merge $options witch default delete options
 
