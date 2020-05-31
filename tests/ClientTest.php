@@ -108,4 +108,38 @@ class ClientTest extends \Dasumi\BaseApiWrapper\Tests\TestCase
         $this->assertEquals('bar', $attributes['foo']);
         $this->assertEquals('bar', $this->client->foo);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_add_attributes_to_request_options()
+    {
+        $client = new ClientWithApiToken([
+            'base_uri' => 'http://httpbin.org',
+            'timeout'  => 2.0,
+        ]);
+        $api_key = '123456';
+
+        $data = $client->get('get');
+        $this->assertEquals([], $data['args']);
+
+        $client->api_key = $api_key;
+
+        $data = $client->get('get');
+        $this->assertEquals(['api_key' => $api_key], $data['args']);
+    }
+}
+
+class ClientWithApiToken extends Client
+{
+    protected function getRequestOptions(array $options) : array
+    {
+        if (is_null($this->api_key)) {
+            return $options;
+        }
+
+        $options['query']['api_key'] = $this->api_key;
+
+        return $options;
+    }
 }

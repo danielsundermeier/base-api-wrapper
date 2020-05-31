@@ -78,11 +78,19 @@ class Client
         return $this->send($request, $options);
     }
 
+    protected function createRequest($method, $path) : \GuzzleHttp\Psr7\Request
+    {
+        return new \GuzzleHttp\Psr7\Request($method, $this->pathPrefix() . $path);
+    }
+
+    protected function pathPrefix() : string
+    {
+        return '';
+    }
+
     protected function send(\GuzzleHttp\Psr7\Request $request, array $options)
     {
-        // TODO: merge $options witch default delete options
-
-        $response = $this->client->send($request, $options);
+        $response = $this->client->send($request, $this->getRequestOptions($options));
 
         $body = $response->getBody();
 
@@ -94,16 +102,10 @@ class Client
         return json_decode($body, true);
     }
 
-    protected function createRequest($method, $path) : \GuzzleHttp\Psr7\Request
+    protected function getRequestOptions(array $options) : array
     {
-        return new \GuzzleHttp\Psr7\Request($method, $this->pathPrefix() . $path);
+        return $options;
     }
-
-    protected function pathPrefix() : string
-    {
-        return '';
-    }
-
 
     public function snapshot(bool $value = true) : self
     {
