@@ -6,6 +6,8 @@ class Client
 {
     protected $client;
 
+    protected $snapshot = false;
+
     public function __construct(array $config = [])
     {
         $this->setUp();
@@ -88,6 +90,20 @@ class Client
 
         $response = $this->client->send($request, $options);
 
-        return json_decode($response->getBody(), true);
+        $body = $response->getBody();
+
+        if ($this->snapshot) {
+            Snapshot::handle($request, $response);
+            $this->snapshot = false;
+        }
+
+        return json_decode($body, true);
+    }
+
+    public function snapshot(bool $value = true) : self
+    {
+        $this->snapshot = $value;
+
+        return $this;
     }
 }

@@ -73,4 +73,24 @@ class ClientTest extends \Dasumi\BaseApiWrapper\Tests\TestCase
         $data = $this->client->delete('delete', 'a');
         $this->assertEquals('a', $data['data']);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_make_a_snapshot_of_the_body()
+    {
+        $path = 'snapshots/get.json';
+
+        $this->assertFileNotExists($path);
+
+        $data = $this->client->snapshot()->get('get', ['b' => 2], [
+            'query' => [
+                'b' => 1,
+            ],
+        ]);
+
+        $this->assertFileExists($path);
+
+        unlink($path);
+    }
 }

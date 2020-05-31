@@ -12,4 +12,11 @@ class AbstractApi
     {
         $this->client = $client;
     }
+
+    public function snapshot() : self
+    {
+        $this->client->snapshot();
+
+        return $this;
+    }
 }
