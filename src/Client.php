@@ -4,25 +4,29 @@ namespace Dasumi\BaseApiWrapper;
 
 class Client
 {
+    protected $attributes = [];
+
     protected $client;
 
     protected $snapshot = false;
 
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], array $attributes = [])
     {
         $this->setUp();
         $this->setClient($config);
-    }
-
-    protected function setUp() : void
-    {
-        //
     }
 
     protected function setClient(array $config = []) : void
     {
         $this->client = new \GuzzleHttp\Client($config);
     }
+
+
+    protected function setUp() : void
+    {
+        //
+    }
+
 
     public function delete(string $path, string $body = '', array $options = [])
     {
@@ -74,16 +78,6 @@ class Client
         return $this->send($request, $options);
     }
 
-    protected function createRequest($method, $path) : \GuzzleHttp\Psr7\Request
-    {
-        return new \GuzzleHttp\Psr7\Request($method, $this->pathPrefix() . $path);
-    }
-
-    protected function pathPrefix() : string
-    {
-        return '';
-    }
-
     protected function send(\GuzzleHttp\Psr7\Request $request, array $options)
     {
         // TODO: merge $options witch default delete options
@@ -100,10 +94,55 @@ class Client
         return json_decode($body, true);
     }
 
+    protected function createRequest($method, $path) : \GuzzleHttp\Psr7\Request
+    {
+        return new \GuzzleHttp\Psr7\Request($method, $this->pathPrefix() . $path);
+    }
+
+    protected function pathPrefix() : string
+    {
+        return '';
+    }
+
+
     public function snapshot(bool $value = true) : self
     {
         $this->snapshot = $value;
 
         return $this;
+    }
+
+    public function __get($key)
+    {
+        return $this->getAttribute($key);
+    }
+
+    public function getAttributes() : array
+    {
+        return $this->attributes;
+    }
+
+    public function getAttribute($key)
+    {
+        if (! array_key_exists($key, $this->attributes)) {
+            return null;
+        }
+
+        return $this->attributes[$key];
+    }
+
+    public function __set($key, $value)
+    {
+        $this->setAttribute($key, $value);
+    }
+
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
+    }
+
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
     }
 }

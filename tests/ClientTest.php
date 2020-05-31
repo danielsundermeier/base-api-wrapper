@@ -93,4 +93,19 @@ class ClientTest extends \Dasumi\BaseApiWrapper\Tests\TestCase
 
         unlink($path);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_set_attributes()
+    {
+        $this->assertNull($this->client->foo);
+
+        $this->client->foo = 'bar';
+
+        $attributes = $this->client->getAttributes();
+
+        $this->assertEquals('bar', $attributes['foo']);
+        $this->assertEquals('bar', $this->client->foo);
+    }
 }
